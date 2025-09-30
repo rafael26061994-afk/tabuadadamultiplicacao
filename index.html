@@ -1,4 +1,4 @@
-<!doctype html>
+<!doctype html> 
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8" />
@@ -52,6 +52,7 @@
   .big{font-size:1.2rem;font-weight:600}
   footer{margin-top:20px;color:var(--muted);font-size:0.9rem;text-align:center}
   .about{margin-top:20px;padding:15px;border-top:1px solid rgba(0,0,0,0.1);font-size:0.9rem;line-height:1.5;color:var(--text);}
+  .options{margin-bottom:16px;padding:10px;background:var(--glass);border-radius:var(--radius);}
 </style>
 </head>
 <body>
@@ -73,6 +74,11 @@
       <label><input type="radio" name="mode" value="relax"> Sem tempo</label>
     </div>
     <div class="muted">Use as teclas <strong>1</strong> a <strong>4</strong> para responder</div>
+  </div>
+
+  <div class="options">
+    <label><input type="checkbox" id="autoVLibras"> Auto VLibras</label>
+    <label style="margin-left:12px;"><input type="checkbox" id="autoRead"> Ler pergunta automaticamente</label>
   </div>
 
   <main>
@@ -129,7 +135,7 @@
   <div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div>
 </div>
 <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-<script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
+<script>const vlibrasWidget = new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
 
 <script>
 (() => {
@@ -138,7 +144,6 @@
     {name:'Intermediário', min:6,max:10, total:110},
     {name:'Avançado', min:11,max:20, total:20}
   ];
-  const msgMot = ['Muito bem!', 'Continue assim!', 'Você consegue!', 'Não desista!','Ótimo esforço!', 'Vamos lá!', 'Boa tentativa!'];
   const state = {
     score:0, questionIndex:0, totalQuestions:levels[0].total,
     consecutiveCorrect:0, locked:false, currentQuestion:null,
@@ -158,16 +163,22 @@
         levelName = document.getElementById('levelName');
 
   let modeTimed = true;
+  let autoVLibras = false;
+  let autoRead = false;
+
   document.querySelectorAll('input[name="mode"]').forEach(r=>r.addEventListener('change', e=>{
     modeTimed = e.target.value === 'timed';
     resetGame();
   }));
 
+  document.getElementById('autoVLibras').addEventListener('change', e => autoVLibras=e.target.checked);
+  document.getElementById('autoRead').addEventListener('change', e => autoRead=e.target.checked);
+
   function randInt(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
   function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 
   function generateQuestionList(level){
-    const list = [];
+    const list=[];
     for(let i=level.min;i<=level.max;i++){
       for(let j=level.min;j<=level.max;j++){
         list.push({a:i,b:j,correct:i*j});
@@ -177,7 +188,7 @@
   }
 
   function generateOptions(correct){
-    const set = new Set([correct]);
+    const set=new Set([correct]);
     while(set.size<4){
       let c = correct + randInt(-Math.max(1,correct), Math.max(1,correct));
       if(c<0)c=Math.abs(c);
@@ -186,8 +197,16 @@
     return [...set];
   }
 
+  function speakQuestion(q){
+    if(autoRead){
+      const utter = new SpeechSynthesisUtterance(`Quanto é ${q.a} vezes ${q.b}?`);
+      utter.lang='pt-BR';
+      speechSynthesis.speak(utter);
+    }
+  }
+
   function renderQuestion(q){
-    qText.textContent=`Quanto é ${q.a} × ${q.b} ?`;
+    qText.textContent=`Quanto é ${q.a} × ${q.b}?`;
     answerButtons.forEach((btn,i)=>{
       btn.innerHTML=`<span>${i+1})</span> ${q.options[i]}`;
       btn.dataset.value=q.options[i];
@@ -197,6 +216,17 @@
     qcountEl.textContent=state.questionIndex;
     progressText.textContent=`${state.questionIndex}/${state.totalQuestions}`;
     levelName.textContent = levels[state.levelIndex].name;
+
+    // Auto VLibras
+    if(autoVLibras && window.VLibras){
+      const input = document.querySelector('.vw-plugin-wrapper input[type=text]');
+      if(input){
+        input.value = `Quanto é ${q.a} vezes ${q.b}?`;
+        input.dispatchEvent(new Event('input'));
+      }
+    }
+
+    speakQuestion(q);
   }
 
   function updateProgress(){
@@ -222,16 +252,13 @@
     state.locked = true;
     clearInterval(state.timer);
     const correct = state.currentQuestion.correct;
-    const msg = msgMot[randInt(0,msgMot.length-1)];
     if(val == correct){
       btn.classList.add('flash-success');
       state.score += modeTimed ? Math.ceil(state.timeLeft) : 1;
       state.consecutiveCorrect++;
-      alert(msg);
     } else {
       btn.classList.add('flash-error');
       state.consecutiveCorrect=0;
-      alert(msg);
     }
     setTimeout(()=>{btn.classList.remove('flash-success','flash-error'); nextQuestion();},500);
     updateProgress();
@@ -247,24 +274,16 @@
       state.usedQuestions.clear();
     }
     if(state.questionIndex>=state.totalQuestions){
-      const acertos=state.consecutiveCorrect;
-      const percAcertos=acertos/state.totalQuestions;
-      if(percAcertos>=0.8 && state.levelIndex<levels.length-1){
-        state.levelIndex++;
-        alert(`Parabéns! Você avançou para o nível ${levels[state.levelIndex].name}!`);
-        state.questionList=[]; state.questionIndex=0; state.consecutiveCorrect=0;
-        nextQuestion(); return;
-      } else if(state.levelIndex===levels.length-1){
-        alert(`Parabéns! Você concluiu todos os níveis!\nPontuação final: ${state.score}\nStreak máximo: ${state.maxStreak}`);
-        resetGame(); return;
-      } else {state.questionIndex=0; state.consecutiveCorrect=0;}
+      if(state.levelIndex<levels.length-1) state.levelIndex++;
+      resetGame();
+      return;
     }
     state.currentQuestion = {
       ...state.questionList[state.questionIndex],
       options: shuffle(generateOptions(state.questionList[state.questionIndex].correct))
     };
-    renderQuestion(state.currentQuestion);
     state.questionIndex++;
+    renderQuestion(state.currentQuestion);
     updateProgress();
     if(modeTimed) startTimer();
   }
@@ -287,7 +306,7 @@
 
   function resetGame(){
     clearInterval(state.timer);
-    state.score=0; state.questionIndex=0; state.consecutiveCorrect=0; state.levelIndex=0; state.maxStreak=0;
+    state.score=0; state.questionIndex=0; state.consecutiveCorrect=0; state.maxStreak=0;
     state.questionList=[]; state.usedQuestions.clear();
     nextQuestion();
   }
@@ -306,12 +325,7 @@
     document.getElementById('btnTheme').textContent=document.body.classList.contains('light')?'☀️':'🌙';
   });
 
-  document.getElementById('btnVoice').addEventListener('click',()=>{
-    const msg=state.currentQuestion?`Quanto é ${state.currentQuestion.a} vezes ${state.currentQuestion.b}?`:'Carregando pergunta...';
-    const utter=new SpeechSynthesisUtterance(msg);
-    utter.lang='pt-BR';
-    speechSynthesis.speak(utter);
-  });
+  document.getElementById('btnVoice').addEventListener('click',()=>speakQuestion(state.currentQuestion));
 
   nextQuestion();
 })();
