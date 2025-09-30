@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Tabuada da Multiplicação - Fase 4</title>
+<style>
+  :root {
+    --bg: #0f1724; --card: #0b1220; --text: #e6eef8; --accent: #ff6b6b;
+    --primary: #4f46e5; --success: #10b981; --danger: #ef4444;
+    --muted: #94a3b8; --focus: #ffd166; --radius: 12px; --glass: rgba(255,255,255,0.03);
+    --max-width: 900px;
+  }
+  body.light {
+    --bg: #ffffff; --card: #f9f9f9; --text: #111111; --accent: #e63946;
+    --primary: #1d4ed8; --success: #059669; --danger: #dc2626; --muted: #555555;
+    --focus: #f59e0b; --glass: rgba(0,0,0,0.05);
+  }
+  *{box-sizing:border-box} html,body{height:100%} body{
+    margin:0; font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto;
+    background: var(--bg); color:var(--text); -webkit-font-smoothing:antialiased;
+    padding:24px; display:flex; align-items:flex-start; justify-content:center;
+    transition: background 0.3s, color 0.3s;
+  }
+  .wrap{width:100%;max-width:var(--max-width);background:var(--card);border-radius:16px;padding:20px;box-shadow:0 6px 24px rgba(2,6,23,0.5);}
+  header{display:flex;align-items:center;gap:16px;margin-bottom:12px;}
+  h1{margin:0;font-size:1.8rem;}
+  .subtitle{color:var(--muted);font-size:0.9rem;}
+  .topbar{display:flex;align-items:center;gap:12px;margin-bottom:18px;justify-content:space-between;}
+  main{display:grid;grid-template-columns:1fr 320px;gap:18px;}
+  @media (max-width:880px){main{grid-template-columns:1fr;}}
+  .card{background:var(--glass);padding:18px;border-radius:var(--radius);min-height:140px;position:relative;transition: background 0.3s, transform 0.2s;}
+  .question{display:flex;flex-direction:column;gap:12px;}
+  .q-text{font-size:1.4rem;font-weight:600;text-align:center;transition: background 0.3s, color 0.3s; padding:10px; border-radius:8px;}
+  .answers{display:grid;gap:12px;grid-template-columns:1fr 1fr;}
+  .answer-btn{background:var(--primary);color:#fff;border:none;padding:14px;border-radius:10px;font-size:1.1rem;cursor:pointer;transition: transform .08s ease, box-shadow .12s ease;text-align:left;}
+  .answer-btn span{font-weight:bold;margin-right:6px;color:var(--focus);}
+  .answer-btn:hover{transform:scale(1.05);box-shadow:0 0 10px rgba(0,0,0,0.2);}
+  .answer-btn:active{transform:scale(0.98)}
+  .flash-success{background:var(--success)!important; animation: flashSuccess 0.3s;}
+  .flash-error{background:var(--danger)!important; animation: flashError 0.3s;}
+  @keyframes flashSuccess{0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);}}
+  @keyframes flashError{0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);}}
+  .mascot{display:flex;align-items:center;justify-content:center;height:200px;border-radius:12px;transition: transform 0.3s;}
+  .mascot svg{width:160px;height:160px;}
+  .score-row{display:flex;justify-content:space-between;align-items:center;}
+  .progress{width:100%;height:12px;border-radius:999px;background:rgba(0,0,0,0.15);overflow:hidden;}
+  .progress > span{display:block;height:100%;width:0%;border-radius:999px;transition: width .45s ease, background .45s ease;}
+  .time-bar{position:absolute;bottom:0;left:0;height:6px;width:100%;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden;}
+  .time-bar > span{display:block;height:100%;width:100%;background:var(--accent);transition:width 0.2s linear;}
+  .muted{color:var(--muted);font-size:0.9rem}
+  .big{font-size:1.2rem;font-weight:600}
+  footer{margin-top:20px;color:var(--muted);font-size:0.9rem;text-align:center}
+  .about{margin-top:20px;padding:15px;border-top:1px solid rgba(0,0,0,0.1);font-size:0.9rem;line-height:1.5;color:var(--text);}
+</style>
+</head>
+<body>
+<div class="wrap" role="application" aria-label="Tabuada da Multiplicação - Fase 4">
+  <header>
+    <h1>Tabuada da Multiplicação - Fase 4</h1>
+    <div style="margin-left:auto" class="controls">
+      <button id="btnTheme" title="Alternar tema">🌙</button>
+      <button id="btnVoice" title="Ler pergunta em voz alta">🔊</button>
+      <button id="btnVLibras" title="VLibras">🤟</button>
+    </div>
+  </header>
+
+  <div class="subtitle">Raciocínio & diversão — 0 a 20</div>
+
+  <div class="topbar">
+    <div class="muted">Escolha o modo: 
+      <label><input type="radio" name="mode" value="timed" checked> Teste rápido com tempo</label> |
+      <label><input type="radio" name="mode" value="relax"> Sem tempo</label>
+    </div>
+    <div class="muted">Use as teclas <strong>1</strong> a <strong>4</strong> para responder</div>
+  </div>
+
+  <main>
+    <section class="card question">
+      <div id="qTitle" class="q-text" aria-live="polite">Carregando...</div>
+      <div class="time-bar"><span id="timeBar"></span></div>
+      <div id="answers" class="answers">
+        <button class="answer-btn" data-index="0"><span>1)</span> A</button>
+        <button class="answer-btn" data-index="1"><span>2)</span> B</button>
+        <button class="answer-btn" data-index="2"><span>3)</span> C</button>
+        <button class="answer-btn" data-index="3"><span>4)</span> D</button>
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-top:10px">
+        <div class="muted">Progresso: <span id="progressText">0/10</span></div>
+        <div class="muted">Streak: <span id="streak">0</span></div>
+      </div>
+      <div class="muted">Nível atual: <span id="levelName">Fácil</span></div>
+    </section>
+
+    <aside>
+      <div class="card mascot" id="mascot">
+        <svg viewBox="0 0 200 200" id="mascotSvg">
+          <circle cx="100" cy="90" r="50" fill="#ffdca8" />
+          <circle cx="80" cy="85" r="6" fill="#111"/>
+          <circle cx="120" cy="85" r="6" fill="#111"/>
+          <path id="mouth" d="M75 110 Q100 125 125 110" stroke="#222" stroke-width="4" fill="transparent" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <div class="card" style="display:flex; flex-direction:column; gap:10px;">
+        <div class="score-row">
+          <div><div class="muted">Pontuação</div><div class="big" id="score">0</div></div>
+          <div style="text-align:right"><div class="muted">Questões</div><div class="big" id="qcount">0</div></div>
+        </div>
+        <div>
+          <div class="muted">Barra de Progresso</div>
+          <div class="progress"><span id="progressBar" style="width:0%"></span></div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    <div class="about">
+      <strong>Sobre o Criador</strong><br>
+      Rafael é professor de Matemática do Ensino Fundamental – Anos Finais (6º ao 9º ano) na Escola Municipal Vereador José Ferreira de Aguiar, no bairro Icaivera, em Contagem/MG. Atua com estudantes de 10 a 15 anos, em um contexto de infraestrutura limitada e inclusão de estudantes da Educação Especial. Pessoa com deficiência (monoparesia do lado direito), desenvolve práticas pedagógicas acessíveis, com foco em tecnologia, ética e inclusão. O projeto nasceu da percepção de que muitos estudantes têm dificuldades com a matemática por não dominarem a tabuada — lacuna que ele busca preencher com uma abordagem lúdica e acessível.
+    </div>
+  </footer>
+</div>
+
+<!-- VLibras widget -->
+<div vw class="enabled">
+  <div vw-access-button class="active"></div>
+  <div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div>
+</div>
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
+
+<script>
+(() => {
+  const levels = [
+    {name:'Fácil', min:0,max:5, total:110},
+    {name:'Intermediário', min:6,max:10, total:110},
+    {name:'Avançado', min:11,max:20, total:20}
+  ];
+  const msgMot = ['Muito bem!', 'Continue assim!', 'Você consegue!', 'Não desista!','Ótimo esforço!', 'Vamos lá!', 'Boa tentativa!'];
+  const state = {
+    score:0, questionIndex:0, totalQuestions:levels[0].total,
+    consecutiveCorrect:0, locked:false, currentQuestion:null,
+    timer:null, timeLeft:8, maxTime:8, levelIndex:0, maxStreak:0,
+    questionList:[], usedQuestions:new Set()
+  };
+
+  const qText = document.getElementById('qTitle'),
+        answerButtons = [...document.querySelectorAll('.answer-btn')],
+        scoreEl = document.getElementById('score'),
+        qcountEl = document.getElementById('qcount'),
+        progressText = document.getElementById('progressText'),
+        progressBar = document.getElementById('progressBar'),
+        streakEl = document.getElementById('streak'),
+        mouthPath = document.getElementById('mouth'),
+        timeBar = document.getElementById('timeBar'),
+        levelName = document.getElementById('levelName');
+
+  let modeTimed = true;
+  document.querySelectorAll('input[name="mode"]').forEach(r=>r.addEventListener('change', e=>{
+    modeTimed = e.target.value === 'timed';
+    resetGame();
+  }));
+
+  function randInt(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+  function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+  function generateQuestionList(level){
+    const list = [];
+    for(let i=level.min;i<=level.max;i++){
+      for(let j=level.min;j<=level.max;j++){
+        list.push({a:i,b:j,correct:i*j});
+      }
+    }
+    return shuffle(list).slice(0, level.total);
+  }
+
+  function generateOptions(correct){
+    const set = new Set([correct]);
+    while(set.size<4){
+      let c = correct + randInt(-Math.max(1,correct), Math.max(1,correct));
+      if(c<0)c=Math.abs(c);
+      set.add(c);
+    }
+    return [...set];
+  }
+
+  function renderQuestion(q){
+    qText.textContent=`Quanto é ${q.a} × ${q.b} ?`;
+    answerButtons.forEach((btn,i)=>{
+      btn.innerHTML=`<span>${i+1})</span> ${q.options[i]}`;
+      btn.dataset.value=q.options[i];
+      btn.classList.remove('flash-success','flash-error');
+      btn.disabled=false;
+    });
+    qcountEl.textContent=state.questionIndex;
+    progressText.textContent=`${state.questionIndex}/${state.totalQuestions}`;
+    levelName.textContent = levels[state.levelIndex].name;
+  }
+
+  function updateProgress(){
+    progressBar.style.width = `${(state.questionIndex/state.totalQuestions)*100}%`;
+    const percent = (state.questionIndex/state.totalQuestions)*100;
+    if(percent<40) progressBar.style.background='var(--danger)';
+    else if(percent<70) progressBar.style.background='var(--accent)';
+    else progressBar.style.background='var(--success)';
+    scoreEl.textContent = state.score;
+    streakEl.textContent = state.consecutiveCorrect;
+    if(state.consecutiveCorrect>state.maxStreak) state.maxStreak=state.consecutiveCorrect;
+    updateMascot();
+  }
+
+  function updateMascot(){
+    if(state.consecutiveCorrect>=5) mouthPath.setAttribute('d','M70 115 Q100 150 130 115');
+    else if(state.consecutiveCorrect>0) mouthPath.setAttribute('d','M75 110 Q100 125 125 110');
+    else mouthPath.setAttribute('d','M80 118 Q100 110 120 118');
+  }
+
+  function handleAnswer(val, btn){
+    if(state.locked) return;
+    state.locked = true;
+    clearInterval(state.timer);
+    const correct = state.currentQuestion.correct;
+    const msg = msgMot[randInt(0,msgMot.length-1)];
+    if(val == correct){
+      btn.classList.add('flash-success');
+      state.score += modeTimed ? Math.ceil(state.timeLeft) : 1;
+      state.consecutiveCorrect++;
+      alert(msg);
+    } else {
+      btn.classList.add('flash-error');
+      state.consecutiveCorrect=0;
+      alert(msg);
+    }
+    setTimeout(()=>{btn.classList.remove('flash-success','flash-error'); nextQuestion();},500);
+    updateProgress();
+  }
+
+  function nextQuestion(){
+    state.locked=false;
+    state.timeLeft=state.maxTime;
+    if(state.questionList.length===0){
+      state.questionList=generateQuestionList(levels[state.levelIndex]);
+      state.totalQuestions=levels[state.levelIndex].total;
+      state.questionIndex=0;
+      state.usedQuestions.clear();
+    }
+    if(state.questionIndex>=state.totalQuestions){
+      const acertos=state.consecutiveCorrect;
+      const percAcertos=acertos/state.totalQuestions;
+      if(percAcertos>=0.8 && state.levelIndex<levels.length-1){
+        state.levelIndex++;
+        alert(`Parabéns! Você avançou para o nível ${levels[state.levelIndex].name}!`);
+        state.questionList=[]; state.questionIndex=0; state.consecutiveCorrect=0;
+        nextQuestion(); return;
+      } else if(state.levelIndex===levels.length-1){
+        alert(`Parabéns! Você concluiu todos os níveis!\nPontuação final: ${state.score}\nStreak máximo: ${state.maxStreak}`);
+        resetGame(); return;
+      } else {state.questionIndex=0; state.consecutiveCorrect=0;}
+    }
+    state.currentQuestion = {
+      ...state.questionList[state.questionIndex],
+      options: shuffle(generateOptions(state.questionList[state.questionIndex].correct))
+    };
+    renderQuestion(state.currentQuestion);
+    state.questionIndex++;
+    updateProgress();
+    if(modeTimed) startTimer();
+  }
+
+  function startTimer(){
+    clearInterval(state.timer);
+    state.timer=setInterval(()=>{
+      state.timeLeft-=0.2;
+      if(state.timeLeft<0) state.timeLeft=0;
+      timeBar.style.width=`${(state.timeLeft/state.maxTime)*100}%`;
+      if(state.timeLeft<=3){
+        qText.style.background='#ef444480';
+        if(!state.alerted){state.alerted=true; new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg').play();}
+      } else if(state.timeLeft<=5) qText.style.background='#ffd16680';
+      else qText.style.background='#10b98140';
+      if(state.timeLeft<=0){clearInterval(state.timer); state.consecutiveCorrect=0; updateProgress(); nextQuestion();}
+    },200);
+    state.alerted=false;
+  }
+
+  function resetGame(){
+    clearInterval(state.timer);
+    state.score=0; state.questionIndex=0; state.consecutiveCorrect=0; state.levelIndex=0; state.maxStreak=0;
+    state.questionList=[]; state.usedQuestions.clear();
+    nextQuestion();
+  }
+
+  answerButtons.forEach(btn=>btn.addEventListener('click',e=>handleAnswer(e.currentTarget.dataset.value,e.currentTarget)));
+  document.addEventListener('keydown',e=>{
+    if(['1','2','3','4'].includes(e.key)){
+      const idx=parseInt(e.key)-1;
+      const btn=answerButtons[idx];
+      if(btn) handleAnswer(btn.dataset.value, btn);
+    }
+  });
+
+  document.getElementById('btnTheme').addEventListener('click',()=>{
+    document.body.classList.toggle('light');
+    document.getElementById('btnTheme').textContent=document.body.classList.contains('light')?'☀️':'🌙';
+  });
+
+  document.getElementById('btnVoice').addEventListener('click',()=>{
+    const msg=state.currentQuestion?`Quanto é ${state.currentQuestion.a} vezes ${state.currentQuestion.b}?`:'Carregando pergunta...';
+    const utter=new SpeechSynthesisUtterance(msg);
+    utter.lang='pt-BR';
+    speechSynthesis.speak(utter);
+  });
+
+  nextQuestion();
+})();
+</script>
+</body>
+</html>
