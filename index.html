@@ -1,334 +1,252 @@
-<!doctype html> 
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Tabuada da Multiplicação - Fase 4</title>
-<style>
-  :root {
-    --bg: #0f1724; --card: #0b1220; --text: #e6eef8; --accent: #ff6b6b;
-    --primary: #4f46e5; --success: #10b981; --danger: #ef4444;
-    --muted: #94a3b8; --focus: #ffd166; --radius: 12px; --glass: rgba(255,255,255,0.03);
-    --max-width: 900px;
-  }
-  body.light {
-    --bg: #ffffff; --card: #f9f9f9; --text: #111111; --accent: #e63946;
-    --primary: #1d4ed8; --success: #059669; --danger: #dc2626; --muted: #555555;
-    --focus: #f59e0b; --glass: rgba(0,0,0,0.05);
-  }
-  *{box-sizing:border-box} html,body{height:100%} body{
-    margin:0; font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto;
-    background: var(--bg); color:var(--text); -webkit-font-smoothing:antialiased;
-    padding:24px; display:flex; align-items:flex-start; justify-content:center;
-    transition: background 0.3s, color 0.3s;
-  }
-  .wrap{width:100%;max-width:var(--max-width);background:var(--card);border-radius:16px;padding:20px;box-shadow:0 6px 24px rgba(2,6,23,0.5);}
-  header{display:flex;align-items:center;gap:16px;margin-bottom:12px;}
-  h1{margin:0;font-size:1.8rem;}
-  .subtitle{color:var(--muted);font-size:0.9rem;}
-  .topbar{display:flex;align-items:center;gap:12px;margin-bottom:18px;justify-content:space-between;}
-  main{display:grid;grid-template-columns:1fr 320px;gap:18px;}
-  @media (max-width:880px){main{grid-template-columns:1fr;}}
-  .card{background:var(--glass);padding:18px;border-radius:var(--radius);min-height:140px;position:relative;transition: background 0.3s, transform 0.2s;}
-  .question{display:flex;flex-direction:column;gap:12px;}
-  .q-text{font-size:1.4rem;font-weight:600;text-align:center;transition: background 0.3s, color 0.3s; padding:10px; border-radius:8px;}
-  .answers{display:grid;gap:12px;grid-template-columns:1fr 1fr;}
-  .answer-btn{background:var(--primary);color:#fff;border:none;padding:14px;border-radius:10px;font-size:1.1rem;cursor:pointer;transition: transform .08s ease, box-shadow .12s ease;text-align:left;}
-  .answer-btn span{font-weight:bold;margin-right:6px;color:var(--focus);}
-  .answer-btn:hover{transform:scale(1.05);box-shadow:0 0 10px rgba(0,0,0,0.2);}
-  .answer-btn:active{transform:scale(0.98)}
-  .flash-success{background:var(--success)!important; animation: flashSuccess 0.3s;}
-  .flash-error{background:var(--danger)!important; animation: flashError 0.3s;}
-  @keyframes flashSuccess{0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);}}
-  @keyframes flashError{0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);}}
-  .mascot{display:flex;align-items:center;justify-content:center;height:200px;border-radius:12px;transition: transform 0.3s;}
-  .mascot svg{width:160px;height:160px;}
-  .score-row{display:flex;justify-content:space-between;align-items:center;}
-  .progress{width:100%;height:12px;border-radius:999px;background:rgba(0,0,0,0.15);overflow:hidden;}
-  .progress > span{display:block;height:100%;width:0%;border-radius:999px;transition: width .45s ease, background .45s ease;}
-  .time-bar{position:absolute;bottom:0;left:0;height:6px;width:100%;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden;}
-  .time-bar > span{display:block;height:100%;width:100%;background:var(--accent);transition:width 0.2s linear;}
-  .muted{color:var(--muted);font-size:0.9rem}
-  .big{font-size:1.2rem;font-weight:600}
-  footer{margin-top:20px;color:var(--muted);font-size:0.9rem;text-align:center}
-  .about{margin-top:20px;padding:15px;border-top:1px solid rgba(0,0,0,0.1);font-size:0.9rem;line-height:1.5;color:var(--text);}
-  .options{margin-bottom:16px;padding:10px;background:var(--glass);border-radius:var(--radius);}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matemágica - Jogo da Matemática</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-<div class="wrap" role="application" aria-label="Tabuada da Multiplicação - Fase 4">
-  <header>
-    <h1>Tabuada da Multiplicação - Fase 4</h1>
-    <div style="margin-left:auto" class="controls">
-      <button id="btnTheme" title="Alternar tema">🌙</button>
-      <button id="btnVoice" title="Ler pergunta em voz alta">🔊</button>
-      <button id="btnVLibras" title="VLibras">🤟</button>
-    </div>
-  </header>
+<body class="light-mode">
 
-  <div class="subtitle">Raciocínio & diversão — 0 a 20</div>
+    <span id="libras-alert" class="libras-alert hidden">⏳ Atenção! O tempo está acabando!</span>
 
-  <div class="topbar">
-    <div class="muted">Escolha o modo: 
-      <label><input type="radio" name="mode" value="timed" checked> Teste rápido com tempo</label> |
-      <label><input type="radio" name="mode" value="relax"> Sem tempo</label>
-    </div>
-    <div class="muted">Use as teclas <strong>1</strong> a <strong>4</strong> para responder</div>
-  </div>
+    <div id="confetti-container"></div>
+    <div id="feedback-message" class="feedback-message hidden"></div>
 
-  <div class="options">
-    <label><input type="checkbox" id="autoVLibras"> Auto VLibras</label>
-    <label style="margin-left:12px;"><input type="checkbox" id="autoRead"> Ler pergunta automaticamente</label>
-  </div>
+    <div class="container">
+        
+        <div id="home-screen" class="screen active">
+            <header>
+                <img src="Sem titulo.png" alt="Logo do Projeto" id="main-logo"> 
+            </header>
 
-  <main>
-    <section class="card question">
-      <div id="qTitle" class="q-text" aria-live="polite">Carregando...</div>
-      <div class="time-bar"><span id="timeBar"></span></div>
-      <div id="answers" class="answers">
-        <button class="answer-btn" data-index="0"><span>1)</span> A</button>
-        <button class="answer-btn" data-index="1"><span>2)</span> B</button>
-        <button class="answer-btn" data-index="2"><span>3)</span> C</button>
-        <button class="answer-btn" data-index="3"><span>4)</span> D</button>
-      </div>
-      <div style="display:flex; justify-content:space-between; margin-top:10px">
-        <div class="muted">Progresso: <span id="progressText">0/10</span></div>
-        <div class="muted">Streak: <span id="streak">0</span></div>
-      </div>
-      <div class="muted">Nível atual: <span id="levelName">Fácil</span></div>
-    </section>
+            <div id="about-section" class="info-card">
+                <h2 class="centered-title">Projeto Matemágica: Inovação e Inclusão</h2>
+                
+                <p>
+                    O Projeto Matemágica nasceu da visão inovadora do professor **Ronaldo**, que identificou nos truques de mágica um poderoso recurso didático para tornar o ensino da matemática mais lúdico e envolvente. 
+                </p>
+                <p>
+                    Em 2025, o projeto ganhou uma nova dimensão com a chegada do professor **Rafael**. Ele integrou a iniciativa com a proposta de incorporar recursos tecnológicos, visando ampliar significativamente o alcance, a interatividade e a acessibilidade do projeto.
+                </p>
+                <p>
+                    Dessa parceria — que une a criatividade e o perfil empático de Ronaldo (professor de Matemática) com a autonomia, entusiasmo e o foco de Rafael na acessibilidade e no uso ético da inteligência artificial na educação — surgiu uma abordagem pedagógica inovadora que funde mágica, matemática e tecnologia. 
+                </p>
+                <p>
+                    Como pessoa com deficiência (monoparesia no lado direito), Rafael traz um compromisso intrínseco com a inclusão. Atualmente, o projeto é desenvolvido na Escola Municipal Vereador José Ferreira de Aguiar, localizada no bairro Icaivera, em Contagem/MG.
+                </p>
 
-    <aside>
-      <div class="card mascot" id="mascot">
-        <svg viewBox="0 0 200 200" id="mascotSvg">
-          <circle cx="100" cy="90" r="50" fill="#ffdca8" />
-          <circle cx="80" cy="85" r="6" fill="#111"/>
-          <circle cx="120" cy="85" r="6" fill="#111"/>
-          <path id="mouth" d="M75 110 Q100 125 125 110" stroke="#222" stroke-width="4" fill="transparent" stroke-linecap="round"/>
-        </svg>
-      </div>
+                <div class="objectives">
+                    <h3>Objetivos principais:</h3>
+                    <ul>
+                        <li>Ensinar matemática de forma criativa;</li>
+                        <li>Estimular o raciocínio lógico;</li>
+                        <li>Promover a inclusão;</li>
+                        <li>Valorizar todos os estudantes.</li>
+                    </ul>
+                </div>
+            </div>
 
-      <div class="card" style="display:flex; flex-direction:column; gap:10px;">
-        <div class="score-row">
-          <div><div class="muted">Pontuação</div><div class="big" id="score">0</div></div>
-          <div style="text-align:right"><div class="muted">Questões</div><div class="big" id="qcount">0</div></div>
+            <p class="call-to-action-paragraph">Escolha uma operação para começar e treinar seu cérebro.</p>
+
+            <div class="operation-grid">
+                <button class="operation-card" data-operation="addition"><h3>Adição (+)</h3></button>
+                <button class="operation-card" data-operation="subtraction"><h3>Subtração (-)</h3></button>
+                <button class="operation-card" data-operation="multiplication"><h3>Multiplicação (x)</h3></button>
+                <button class="operation-card" data-operation="division"><h3>Divisão (÷)</h3></button>
+                <button class="operation-card" data-operation="potenciacao"><h3>Potenciação (aⁿ)</h3></button>
+                <button class="operation-card" data-operation="radiciacao"><h3>Radiciação (√)</h3></button>
+            </div>
+
+            <button id="btn-show-ranking" class="main-btn">🏆 Ver Recordes</button>
+
+            <div class="settings-bar">
+                <button id="toggle-night-mode" class="setting-btn">
+                    <span class="icon">🌙</span> Modo Noite
+                </button>
+                <div class="modes-toggle">
+                    Modo:
+                    <button id="mode-rapido" class="mode-btn active">Rápido</button>
+                    <button id="mode-estudo" class="mode-btn">Estudo</button>
+                </div>
+            </div>
+
+            <div class="accessibility-bar">
+                <span class="access-title">Acessibilidade:</span>
+                <button id="toggle-voice-read" class="setting-btn toggle-access">
+                    <span class="icon">🔊</span> Leitura de Voz
+                </button>
+                <button id="toggle-libras" class="setting-btn toggle-access">
+                    <span class="icon">🤟</span> Modo Libras
+                </button>
+            </div>
+
+            <div id="creators-section">
+                <h3>Criado por:</h3>
+                <div class="creators-grid">
+                    <div class="creator-card">
+                        <img src="ronaldo.png" alt="Avatar de Ronaldo" class="avatar"> 
+                        <p>Prof.: Ronaldo Soares</p>
+                    </div>
+                    <div class="creator-card">
+                        <img src="rafael.png" alt="Avatar de Rafael" class="avatar">
+                        <p>Prof.: Rafael Oliveira</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div>
-          <div class="muted">Barra de Progresso</div>
-          <div class="progress"><span id="progressBar" style="width:0%"></span></div>
+
+        <div id="level-selection-screen" class="screen">
+            <header class="game-header">
+                <button class="btn-secondary btn-voltar-home">Mudar Operação</button>
+                <h1>Configuração e Nível</h1>
+            </header>
+
+            <div class="info-card">
+                <h2>Selecione a Dificuldade</h2>
+                <p>O nível de dificuldade define a complexidade das questões e, no Modo Rápido, o tempo limite, que é dobrado caso a Acessibilidade (Voz ou Libras) esteja ativa, conforme a regra do jogo.</p>
+            </div>
+
+            <div class="level-selection">
+                <button class="level-btn" data-level="easy">
+                    <h3>Fácil (👶)</h3>
+                    <p>Ideal para iniciantes. Números e tabuadas menores (Tempo Base: 15s).</p>
+                </button>
+                <button class="level-btn" data-level="medium">
+                    <h3>Médio (🧠)</h3>
+                    <p>Desafio moderado. Tabuadas médias, potências e raízes simples (Tempo Base: 30s).</p>
+                </button>
+                <button class="level-btn" data-level="advanced">
+                    <h3>Avançado (🚀)</h3>
+                    <p>Para mestres. Potências e raízes complexas, tabuadas e números altos (Tempo Base: 45s).</p>
+                </button>
+            </div>
+
+            <p style="text-align: center; margin-top: 20px; font-weight: 600; color: var(--cor-secundaria);">
+                O Modo de Jogo (Rápido/Estudo) e Acessibilidade já foram definidos. Clique em um nível para iniciar o desafio!
+            </p>
         </div>
-      </div>
-    </aside>
-  </main>
 
-  <footer>
-    <div class="about">
-      <strong>Sobre o Criador</strong><br>
-      Rafael é professor de Matemática do Ensino Fundamental – Anos Finais (6º ao 9º ano) na Escola Municipal Vereador José Ferreira de Aguiar, no bairro Icaivera, em Contagem/MG. Atua com estudantes de 10 a 15 anos, em um contexto de infraestrutura limitada e inclusão de estudantes da Educação Especial. Pessoa com deficiência (monoparesia do lado direito), desenvolve práticas pedagógicas acessíveis, com foco em tecnologia, ética e inclusão. O projeto nasceu da percepção de que muitos estudantes têm dificuldades com a matemática por não dominarem a tabuada — lacuna que ele busca preencher com uma abordagem lúdica e acessível.
+
+        <div id="game-screen" class="screen">
+            <header class="game-header">
+                <button class="btn-secondary btn-quit-game">SAIR</button>
+                <div class="score-info">
+                    <span id="player-score">0 Pontos</span>
+                    <span id="player-xp">XP: 0</span>
+                </div>
+            </header>
+
+            <div id="timer-container" class="timer-container">
+                <div id="time-bar" class="time-bar"></div>
+                <span id="time-display" class="time-display">00s</span> 
+            </div>
+
+            <div class="question-area info-card">
+                <p id="question-counter">Questão: 1/20</p>
+                <h1 id="question-text">5 + 5 = ?</h1>
+            </div>
+
+            <div class="options-grid answers-grid">
+                <button class="btn-answer" data-key="A"></button>
+                <button class="btn-answer" data-key="B"></button>
+                <button class="btn-answer" data-key="C"></button>
+                <button class="btn-answer" data-key="D"></button>
+            </div>
+
+            <div class="action-buttons game-actions">
+                <button class="btn-action" id="btn-extend-time" style="display: none;">
+                    ⏱️ Prorrogar Tempo (<span id="extend-time-cost">100</span> XP)
+                </button>
+                <button class="btn-action" id="btn-show-answer" style="display: none;">
+                    💡 Mostrar Resposta
+                </button>
+            </div>
+        </div>
+
+        <div id="result-screen" class="screen">
+            <header>
+                <h1>Resultado da Rodada</h1>
+            </header>
+            
+            <div class="info-card result-summary">
+                <h2 style="text-align: center;">Pontuação Final: <span id="final-score">0</span></h2>
+                <p id="study-suggestion" class="suggestion"></p>
+                
+                <div class="result-details">
+                    <div class="result-item">
+                        <span class="stat-label">Acertos:</span>
+                        <p id="total-hits" class="correct-answer">0</p>
+                    </div>
+                    <div class="result-item">
+                        <span class="stat-label">Erros:</span>
+                        <p id="total-misses" class="wrong-answer">0</p>
+                    </div>
+                </div>
+
+                <div class="xp-summary" style="text-align: center; margin-top: 15px;">
+                    <p>XP Ganhos na Rodada: <span id="xp-gained" class="correct-answer">+0</span></p>
+                    <p>XP Total: <span id="xp-total">0</span></p>
+                </div>
+            </div>
+
+            <div class="footer-options">
+                <button class="btn-primary btn-voltar-home" style="flex-grow: 1;">Novo Desafio</button>
+                <button class="btn-secondary" id="btn-treinar-erros" style="display: none;">Treinar Erros</button>
+            </div>
+        </div>
+        
+        <div id="ranking-screen" class="screen">
+            <header class="game-header">
+                <button class="btn-secondary btn-voltar-home">Voltar</button>
+                <h1>Ranking de Recordes</h1>
+            </header>
+
+            <div class="ranking-container">
+                <p id="no-records-message" class="incentive-message hidden">Nenhum recorde registrado ainda. Comece a jogar!</p>
+                <div id="ranking-list-container">
+                    </div>
+            </div>
+            <button class="btn-action btn-secondary" id="btn-clear-ranking">Limpar Ranking</button>
+        </div>
+
+        <div id="error-training-screen" class="screen">
+            <header class="game-header">
+                <button class="btn-secondary btn-voltar-home">Voltar</button>
+                <h1>Treinamento de Erros</h1>
+            </header>
+
+            <div class="info-card">
+                <p id="error-count-message">Carregando erros...</p>
+            </div>
+            
+            <button class="btn-primary" id="btn-start-training" disabled>Começar Treinamento</button>
+
+            <h2 style="margin-top: 30px; font-size: 1.2em;">Últimos Erros Salvos:</h2>
+            <div id="error-list-container">
+                </div>
+            
+            <button class="btn-action btn-secondary" id="btn-clear-errors" disabled>Limpar Erros Salvos</button>
+        </div>
+
+
+        </div>
+
+    <audio id="alert-sound" src="alert-sound.mp3" preload="auto"></audio> 
+
+    <div vw class="enabled">
+        <div vw-access-button class="active"></div>
+        <div vw-plugin-wrapper>
+            <div class="vw-plugin-top-wrapper"></div>
+        </div>
     </div>
-  </footer>
-</div>
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script>
+        // Inicialização do VLibras
+        new window.VLibras.Widget('https://vlibras.gov.br/app');
+    </script>
 
-<!-- VLibras widget -->
-<div vw class="enabled">
-  <div vw-access-button class="active"></div>
-  <div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div>
-</div>
-<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-<script>const vlibrasWidget = new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
-
-<script>
-(() => {
-  const levels = [
-    {name:'Fácil', min:0,max:5, total:110},
-    {name:'Intermediário', min:6,max:10, total:110},
-    {name:'Avançado', min:11,max:20, total:20}
-  ];
-  const state = {
-    score:0, questionIndex:0, totalQuestions:levels[0].total,
-    consecutiveCorrect:0, locked:false, currentQuestion:null,
-    timer:null, timeLeft:8, maxTime:8, levelIndex:0, maxStreak:0,
-    questionList:[], usedQuestions:new Set()
-  };
-
-  const qText = document.getElementById('qTitle'),
-        answerButtons = [...document.querySelectorAll('.answer-btn')],
-        scoreEl = document.getElementById('score'),
-        qcountEl = document.getElementById('qcount'),
-        progressText = document.getElementById('progressText'),
-        progressBar = document.getElementById('progressBar'),
-        streakEl = document.getElementById('streak'),
-        mouthPath = document.getElementById('mouth'),
-        timeBar = document.getElementById('timeBar'),
-        levelName = document.getElementById('levelName');
-
-  let modeTimed = true;
-  let autoVLibras = false;
-  let autoRead = false;
-
-  document.querySelectorAll('input[name="mode"]').forEach(r=>r.addEventListener('change', e=>{
-    modeTimed = e.target.value === 'timed';
-    resetGame();
-  }));
-
-  document.getElementById('autoVLibras').addEventListener('change', e => autoVLibras=e.target.checked);
-  document.getElementById('autoRead').addEventListener('change', e => autoRead=e.target.checked);
-
-  function randInt(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
-  function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-
-  function generateQuestionList(level){
-    const list=[];
-    for(let i=level.min;i<=level.max;i++){
-      for(let j=level.min;j<=level.max;j++){
-        list.push({a:i,b:j,correct:i*j});
-      }
-    }
-    return shuffle(list).slice(0, level.total);
-  }
-
-  function generateOptions(correct){
-    const set=new Set([correct]);
-    while(set.size<4){
-      let c = correct + randInt(-Math.max(1,correct), Math.max(1,correct));
-      if(c<0)c=Math.abs(c);
-      set.add(c);
-    }
-    return [...set];
-  }
-
-  function speakQuestion(q){
-    if(autoRead){
-      const utter = new SpeechSynthesisUtterance(`Quanto é ${q.a} vezes ${q.b}?`);
-      utter.lang='pt-BR';
-      speechSynthesis.speak(utter);
-    }
-  }
-
-  function renderQuestion(q){
-    qText.textContent=`Quanto é ${q.a} × ${q.b}?`;
-    answerButtons.forEach((btn,i)=>{
-      btn.innerHTML=`<span>${i+1})</span> ${q.options[i]}`;
-      btn.dataset.value=q.options[i];
-      btn.classList.remove('flash-success','flash-error');
-      btn.disabled=false;
-    });
-    qcountEl.textContent=state.questionIndex;
-    progressText.textContent=`${state.questionIndex}/${state.totalQuestions}`;
-    levelName.textContent = levels[state.levelIndex].name;
-
-    // Auto VLibras
-    if(autoVLibras && window.VLibras){
-      const input = document.querySelector('.vw-plugin-wrapper input[type=text]');
-      if(input){
-        input.value = `Quanto é ${q.a} vezes ${q.b}?`;
-        input.dispatchEvent(new Event('input'));
-      }
-    }
-
-    speakQuestion(q);
-  }
-
-  function updateProgress(){
-    progressBar.style.width = `${(state.questionIndex/state.totalQuestions)*100}%`;
-    const percent = (state.questionIndex/state.totalQuestions)*100;
-    if(percent<40) progressBar.style.background='var(--danger)';
-    else if(percent<70) progressBar.style.background='var(--accent)';
-    else progressBar.style.background='var(--success)';
-    scoreEl.textContent = state.score;
-    streakEl.textContent = state.consecutiveCorrect;
-    if(state.consecutiveCorrect>state.maxStreak) state.maxStreak=state.consecutiveCorrect;
-    updateMascot();
-  }
-
-  function updateMascot(){
-    if(state.consecutiveCorrect>=5) mouthPath.setAttribute('d','M70 115 Q100 150 130 115');
-    else if(state.consecutiveCorrect>0) mouthPath.setAttribute('d','M75 110 Q100 125 125 110');
-    else mouthPath.setAttribute('d','M80 118 Q100 110 120 118');
-  }
-
-  function handleAnswer(val, btn){
-    if(state.locked) return;
-    state.locked = true;
-    clearInterval(state.timer);
-    const correct = state.currentQuestion.correct;
-    if(val == correct){
-      btn.classList.add('flash-success');
-      state.score += modeTimed ? Math.ceil(state.timeLeft) : 1;
-      state.consecutiveCorrect++;
-    } else {
-      btn.classList.add('flash-error');
-      state.consecutiveCorrect=0;
-    }
-    setTimeout(()=>{btn.classList.remove('flash-success','flash-error'); nextQuestion();},500);
-    updateProgress();
-  }
-
-  function nextQuestion(){
-    state.locked=false;
-    state.timeLeft=state.maxTime;
-    if(state.questionList.length===0){
-      state.questionList=generateQuestionList(levels[state.levelIndex]);
-      state.totalQuestions=levels[state.levelIndex].total;
-      state.questionIndex=0;
-      state.usedQuestions.clear();
-    }
-    if(state.questionIndex>=state.totalQuestions){
-      if(state.levelIndex<levels.length-1) state.levelIndex++;
-      resetGame();
-      return;
-    }
-    state.currentQuestion = {
-      ...state.questionList[state.questionIndex],
-      options: shuffle(generateOptions(state.questionList[state.questionIndex].correct))
-    };
-    state.questionIndex++;
-    renderQuestion(state.currentQuestion);
-    updateProgress();
-    if(modeTimed) startTimer();
-  }
-
-  function startTimer(){
-    clearInterval(state.timer);
-    state.timer=setInterval(()=>{
-      state.timeLeft-=0.2;
-      if(state.timeLeft<0) state.timeLeft=0;
-      timeBar.style.width=`${(state.timeLeft/state.maxTime)*100}%`;
-      if(state.timeLeft<=3){
-        qText.style.background='#ef444480';
-        if(!state.alerted){state.alerted=true; new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg').play();}
-      } else if(state.timeLeft<=5) qText.style.background='#ffd16680';
-      else qText.style.background='#10b98140';
-      if(state.timeLeft<=0){clearInterval(state.timer); state.consecutiveCorrect=0; updateProgress(); nextQuestion();}
-    },200);
-    state.alerted=false;
-  }
-
-  function resetGame(){
-    clearInterval(state.timer);
-    state.score=0; state.questionIndex=0; state.consecutiveCorrect=0; state.maxStreak=0;
-    state.questionList=[]; state.usedQuestions.clear();
-    nextQuestion();
-  }
-
-  answerButtons.forEach(btn=>btn.addEventListener('click',e=>handleAnswer(e.currentTarget.dataset.value,e.currentTarget)));
-  document.addEventListener('keydown',e=>{
-    if(['1','2','3','4'].includes(e.key)){
-      const idx=parseInt(e.key)-1;
-      const btn=answerButtons[idx];
-      if(btn) handleAnswer(btn.dataset.value, btn);
-    }
-  });
-
-  document.getElementById('btnTheme').addEventListener('click',()=>{
-    document.body.classList.toggle('light');
-    document.getElementById('btnTheme').textContent=document.body.classList.contains('light')?'☀️':'🌙';
-  });
-
-  document.getElementById('btnVoice').addEventListener('click',()=>speakQuestion(state.currentQuestion));
-
-  nextQuestion();
-})();
-</script>
+    <script src="script.js"></script>
 </body>
 </html>
