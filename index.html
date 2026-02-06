@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matemágica - Jogo da Matemática</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="light-mode">
+
+    <span id="libras-alert" class="libras-alert hidden"></span>
+
+    <div id="confetti-container"></div>
+    <div id="feedback-message" class="feedback-message hidden"></div>
+
+    <div class="container">
+        
+        <div id="home-screen" class="screen active">
+            <header>
+                <img src="Sem titulo.png" alt="Logo do Projeto" id="main-logo"> 
+            </header>
+
+            <div id="about-section" class="info-card">
+                <h2 class="centered-title">PET — Programa de Estudo da Tabuada</h2>
+
+<p><strong>Aprender matemática com jogos, tecnologia e inclusão de verdade.</strong></p>
+
+<p>
+    O Projeto PET nasceu em um encontro pedagógico da rede municipal de Contagem/MG, a partir de uma constatação simples:
+    muitos estudantes até “decoram”, mas não dominam a tabuada (e outros conteúdos) com segurança.
+    O que começou como uma ideia leve evoluiu para uma proposta sólida, criada para engajar, dar autonomia e respeitar o ritmo de cada estudante.
+</p>
+
+<p>
+    Idealizado pelos professores <strong>Rafael Oliveira</strong> e <strong>Ronaldo Soares</strong>, o PET une competências complementares:
+</p>
+
+<p><strong>Rafael Oliveira</strong> — foco em autonomia, IA aplicada à educação e acessibilidade</p>
+<p><strong>Ronaldo Soares</strong> — criatividade, sensibilidade pedagógica e abordagem lúdica</p>
+
+<h3>Objetivo do PET</h3>
+<p>
+    Estimular o aprendizado de conteúdos de Matemática por meio de jogos, tornando o estudo mais participativo, consistente e motivador — sem infantilizar.
+</p>
+
+<h3>Inclusão no centro (não como detalhe)</h3>
+<p>
+    No PET, inclusão não é “tema”: é pilar. A vivência pessoal de Rafael com a monoparesia orienta escolhas concretas para que o aprendizado seja mais acessível,
+    mais humano e mais democrático — com tecnologia usada como ponte, não como barreira.
+</p>
+
+<h3>Onde acontece</h3>
+<p>
+    <strong>Escola Municipal Vereador José Ferreira de Aguiar</strong><br>
+    Bairro Icaivera — Contagem/MG
+</p>
+
+<div class="objectives">
+    <h3>Nossos eixos</h3>
+    <ul>
+        <li>Matemática em Jogo: aprendizagem ativa, lúdica e envolvente</li>
+        <li>Raciocínio Lógico: pensamento estratégico e resolução de problemas</li>
+        <li>Inclusão Radical: valorização das singularidades de cada estudante</li>
+        <li>Tecnologia Ética: IA como suporte ao desenvolvimento humano, com responsabilidade</li>
+    </ul>
+</div>
+            </div>
+
+            <p class="call-to-action-paragraph">Escolha uma operação para começar e treinar seu cérebro.</p>
+
+            <div class="operation-grid">
+                <button class="operation-card" data-operation="addition"><h3>Adição (+)</h3></button>
+                <button class="operation-card" data-operation="subtraction"><h3>Subtração (-)</h3></button>
+                <button class="operation-card" data-operation="multiplication"><h3>Multiplicação (x)</h3></button>
+                <button class="operation-card" data-operation="division"><h3>Divisão (÷)</h3></button>
+                <button class="operation-card" data-operation="potenciacao"><h3>Potenciação (aⁿ)</h3></button>
+                <button class="operation-card" data-operation="radiciacao"><h3>Radiciação (√)</h3></button>
+            </div>
+
+            <button id="btn-show-ranking" class="main-btn">🏆 Ver Recordes</button>
+
+            <div class="settings-bar">
+                <button id="toggle-night-mode" class="setting-btn">
+                    <span class="icon">🌙</span> Modo Noite
+                </button>
+                <div class="modes-toggle">
+                    Modo:
+                    <button id="mode-rapido" class="mode-btn active">Rápido</button>
+                    <button id="mode-estudo" class="mode-btn">Estudo</button>
+                </div>
+            </div>
+
+            <div class="accessibility-bar">
+                <span class="access-title">Acessibilidade:</span>
+                <button id="toggle-voice-read" class="setting-btn toggle-access">
+                    <span class="icon">🔊</span> Leitura de Voz
+                </button>
+                <button id="toggle-libras" class="setting-btn toggle-access">
+                    <span class="icon">🤟</span> Modo Libras
+                </button>
+            </div>
+
+            <div id="creators-section">
+                <h3>Criado por:</h3>
+                <div class="creators-grid">
+                    <div class="creator-card">
+                        <img src="ronaldo.png" alt="Avatar de Ronaldo" class="avatar"> 
+                        <p>Prof.: Ronaldo Soares</p>
+                    </div>
+                    <div class="creator-card">
+                        <img src="rafael.png" alt="Avatar de Rafael" class="avatar">
+                        <p>Prof.: Rafael Oliveira</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="level-selection-screen" class="screen">
+            <header class="game-header">
+                <button class="btn-secondary btn-voltar-home">Mudar Operação</button>
+                <h1>Configuração e Nível</h1>
+            </header>
+
+            <div class="info-card">
+                <h2>Selecione a Dificuldade</h2>
+                <p>O nível de dificuldade define a complexidade das questões e, no Modo Rápido, o tempo limite, que é dobrado caso a Acessibilidade (Voz ou Libras) esteja ativa, conforme a regra do jogo.</p>
+            </div>
+
+            <div class="level-selection">
+                <button class="level-btn" data-level="easy">
+                    <h3>Fácil (👶)</h3>
+                    <p>Ideal para iniciantes. Números e tabuadas menores (Tempo Base: 15s).</p>
+                </button>
+                <button class="level-btn" data-level="medium">
+                    <h3>Médio (🧠)</h3>
+                    <p>Desafio moderado. Tabuadas médias, potências e raízes simples (Tempo Base: 30s).</p>
+                </button>
+                <button class="level-btn" data-level="advanced">
+                    <h3>Avançado (🚀)</h3>
+                    <p>Para mestres. Potências e raízes complexas, tabuadas e números altos (Tempo Base: 45s).</p>
+                </button>
+            </div>
+
+            <p style="text-align: center; margin-top: 20px; font-weight: 600; color: var(--cor-secundaria);">
+                O Modo de Jogo (Rápido/Estudo) e Acessibilidade já foram definidos. Clique em um nível para iniciar o desafio!
+            </p>
+        </div>
+
+
+        <div id="game-screen" class="screen">
+            <header class="game-header">
+                <button class="btn-secondary btn-quit-game">SAIR</button>
+                <div class="score-info">
+                    <span id="player-score">0 Pontos</span>
+                    <span id="player-xp">XP: 0</span>
+                </div>
+            </header>
+
+            <div id="timer-container" class="time-container">
+                <div id="time-bar" style="width: 100%; background-color: var(--cor-sucesso);"></div>
+            </div>
+
+            <div class="question-area info-card">
+                <p id="question-counter">Questão: 1/20</p>
+                <h1 id="question-text">5 + 5 = ?</h1>
+            </div>
+
+            <div class="options-grid answers-grid">
+                <button class="answer-option btn-answer">
+                    <span class="answer-text">1</span>
+                </button>
+                <button class="answer-option btn-answer">
+                    <span class="answer-text">2</span>
+                </button>
+                <button class="answer-option btn-answer">
+                    <span class="answer-text">3</span>
+                </button>
+                <button class="answer-option btn-answer">
+                    <span class="answer-text">4</span>
+                </button>
+            </div>
+
+            <div class="action-buttons game-actions">
+                <button class="btn-action" id="btn-extend-time" style="display: none;">
+                    ⏱️ Prorrogar Tempo (<span id="extend-time-cost">100</span> XP)
+                </button>
+                <button class="btn-action" id="btn-show-answer" style="display: none;">
+                    💡 Mostrar Resposta
+                </button>
+            </div>
+        </div>
+
+        <div id="result-screen" class="screen">
+            <header>
+                <h1>Resultado da Rodada</h1>
+            </header>
+            
+            <div class="info-card result-summary">
+                <h2 style="text-align: center;">Pontuação Final: <span id="final-score">0</span></h2>
+                <p id="study-suggestion" class="suggestion"></p>
+                
+                <div class="result-details">
+                    <div class="result-item">
+                        <span class="stat-label">Acertos:</span>
+                        <p id="total-hits" class="correct-answer">0</p>
+                    </div>
+                    <div class="result-item">
+                        <span class="stat-label">Erros:</span>
+                        <p id="total-misses" class="wrong-answer">0</p>
+                    </div>
+                </div>
+
+                <div class="xp-summary" style="text-align: center; margin-top: 15px;">
+                    <p>XP Ganhos na Rodada: <span id="xp-gained" class="correct-answer">+0</span></p>
+                    <p>XP Total: <span id="xp-total">0</span></p>
+                </div>
+            </div>
+
+            <div class="footer-options">
+                <button class="btn-primary btn-voltar-home" style="flex-grow: 1;">Novo Desafio</button>
+                <button class="btn-secondary" id="btn-treinar-erros" style="display: none;">Treinar Erros</button>
+            </div>
+        </div>
+        
+        <div id="ranking-screen" class="screen">
+            <header class="game-header">
+                <button class="btn-secondary btn-voltar-home">Voltar</button>
+                <h1>Ranking de Recordes</h1>
+            </header>
+
+            <div class="ranking-container">
+                <p id="no-records-message" class="incentive-message hidden">Nenhum recorde registrado ainda. Comece a jogar!</p>
+                <div id="ranking-list-container">
+                    </div>
+            </div>
+            <button class="btn-action btn-secondary" id="btn-clear-ranking">Limpar Ranking</button>
+        </div>
+
+        <div id="error-training-screen" class="screen">
+            <header class="game-header">
+                <button class="btn-secondary btn-voltar-home">Voltar</button>
+                <h1>Treinamento de Erros</h1>
+            </header>
+
+            <div class="info-card">
+                <p id="error-count-message">Carregando erros...</p>
+            </div>
+            
+            <button class="btn-primary" id="btn-start-training" disabled>Começar Treinamento</button>
+
+            <h2 style="margin-top: 30px; font-size: 1.2em;">Últimos Erros Salvos:</h2>
+            <div id="error-list-container">
+                </div>
+            
+            <button class="btn-action btn-secondary" id="btn-clear-errors" disabled>Limpar Erros Salvos</button>
+        </div>
+
+
+        </div>
+
+    <audio id="alert-sound" src="alert-sound.mp3" preload="auto"></audio> 
+
+    <div vw class="enabled">
+        <div vw-access-button class="active"></div>
+        <div vw-plugin-wrapper>
+            <div class="vw-plugin-top-wrapper"></div>
+        </div>
+    </div>
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script>
+        // Inicialização do VLibras
+        new window.VLibras.Widget('https://vlibras.gov.br/app');
+    </script>
+
+    <script src="script.js"></script>
+</body>
+</html>

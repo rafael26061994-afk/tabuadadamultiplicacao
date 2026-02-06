@@ -1,0 +1,937 @@
+/* =========================================================================
+   1. Variáveis, Reset e Configurações Globais
+   ========================================================================= */
+
+:root {
+    /* Cores (Modo Claro) */
+    --cor-primaria: #007bff;        /* Azul vibrante */
+    --cor-secundaria: #ff4e50;      /* Vermelho/Laranja */
+    --cor-sucesso: #28a745;         /* Verde */
+    --cor-erro: #dc3545;            /* Vermelho forte */
+    --cor-incentivo: #ffc107;       /* Amarelo/Dourado */
+    --cor-fundo-claro: #f8f9fa;     /* Fundo principal claro */
+    --cor-card-claro: #ffffff;      /* Fundo de cards/blocos */
+    --cor-texto-principal: #212529; /* Texto escuro */
+    --cor-borda-clara: #dee2e6;     /* Borda e separadores */
+
+    /* Espaçamento */
+    --espacamento-padrao: 15px;
+    --sombra-card: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Modo Escuro (Dark Mode) */
+body.dark-mode {
+    --cor-primaria: #6d93ff;
+    --cor-secundaria: #ff7675;
+    --cor-sucesso: #45a053; 
+    --cor-erro: #e85d75;
+    --cor-incentivo: #ffcd38;
+    --cor-fundo-claro: #121212;
+    --cor-card-claro: #1e1e1e;
+    --cor-texto-principal: #ffffff;
+    --cor-borda-clara: #333333;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--cor-fundo-claro);
+    color: var(--cor-texto-principal);
+    transition: background-color 0.3s, color 0.3s;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--espacamento-padrao);
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+}
+
+/* =========================================================================
+   2. Estilos de Telas e Navegação (Screen Management)
+   ========================================================================= */
+
+.screen {
+    background-color: var(--cor-card-claro);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: var(--sombra-card);
+    transition: opacity 0.3s ease-in-out;
+    display: none; /* Inicia todas ocultas */
+}
+
+.screen.active {
+    display: block; /* Apenas a tela ativa é exibida */
+}
+
+/* =========================================================================
+   3. Estilos de Componentes Comuns (Botões, Cards, Header)
+   ========================================================================= */
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#main-logo {
+    max-width: 150px;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.info-card {
+    background-color: var(--cor-fundo-claro);
+    border: 1px solid var(--cor-borda-clara);
+    padding: var(--espacamento-padrao);
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.centered-title {
+    text-align: center;
+    color: var(--cor-primaria);
+    margin-bottom: 10px;
+}
+
+/* Botões Principais */
+.main-btn, .btn-primary {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin: 15px 0;
+    background-color: var(--cor-primaria);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.main-btn:hover, .btn-primary:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background-color: var(--cor-borda-clara);
+    color: var(--cor-texto-principal);
+    padding: 8px 15px;
+    border: 1px solid var(--cor-borda-clara);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-secondary:hover {
+    background-color: #e9ecef;
+}
+
+/* =========================================================================
+   4. Estilos da Tela Inicial (home-screen)
+   ========================================================================= */
+
+.call-to-action-paragraph {
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: var(--cor-secundaria);
+}
+
+.operation-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 colunas */
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.operation-card {
+    background-color: var(--cor-fundo-claro);
+    border: 2px solid var(--cor-primaria);
+    color: var(--cor-texto-principal);
+    padding: 15px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+    text-align: center;
+}
+
+.operation-card h3 {
+    margin: 0;
+    font-size: 1em;
+}
+
+.operation-card:hover {
+    background-color: var(--cor-primaria);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
+}
+
+/* Barra de Configurações (Dark Mode / Modo Jogo) */
+.settings-bar, .accessibility-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px 0;
+    border-top: 1px solid var(--cor-borda-clara);
+}
+
+.accessibility-bar {
+    border-bottom: 1px solid var(--cor-borda-clara);
+}
+
+.access-title {
+    font-weight: 600;
+}
+
+.setting-btn, .mode-btn {
+    background: none;
+    border: 1px solid var(--cor-borda-clara);
+    color: var(--cor-texto-principal);
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 0.9em;
+}
+
+.setting-btn:hover, .mode-btn:hover {
+    background-color: var(--cor-fundo-claro);
+}
+
+.setting-btn.active {
+    background-color: var(--cor-incentivo);
+    color: var(--cor-texto-principal);
+    border-color: var(--cor-incentivo);
+}
+
+.mode-btn.active {
+    background-color: var(--cor-secundaria);
+    color: white;
+    border-color: var(--cor-secundaria);
+}
+
+.modes-toggle {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+/* =========================================================================
+   5. Estilos da Tela de Nível e Jogo
+   ========================================================================= */
+
+/* Estilos de Nível */
+.level-selection {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.level-btn {
+    flex-grow: 1;
+    background-color: var(--cor-fundo-claro);
+    border: 2px solid var(--cor-primaria);
+    color: var(--cor-texto-principal);
+    padding: 20px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.1s, box-shadow 0.2s;
+}
+
+.level-btn h3 { margin-bottom: 5px; color: var(--cor-primaria); }
+.level-btn p { font-size: 0.85em; }
+
+.level-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
+}
+
+
+/* Estilos de Game Screen */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.score-info {
+    font-weight: 700;
+    text-align: right;
+}
+
+.time-container {
+    height: 10px;
+    background-color: var(--cor-borda-clara);
+    border-radius: 5px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+#time-bar {
+    height: 100%;
+    transition: width 0.1s linear, background-color 0.5s;
+}
+
+.question-area {
+    text-align: center;
+    padding: 30px 20px;
+}
+
+#question-counter {
+    color: var(--cor-secundaria);
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+#question-text {
+    font-size: 2.5em;
+    margin: 0;
+    color: var(--cor-texto-principal);
+}
+
+.answers-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn-answer {
+    background-color: var(--cor-fundo-claro);
+    border: 1px solid var(--cor-borda-clara);
+    padding: 20px;
+    font-size: 1.2em;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    color: var(--cor-texto-principal);
+}
+
+.btn-answer:hover:not(:disabled) {
+    background-color: #e9ecef;
+}
+
+.btn-answer.correct {
+    background-color: var(--cor-sucesso);
+    color: white;
+    border-color: var(--cor-sucesso);
+}
+
+.btn-answer.wrong {
+    background-color: var(--cor-erro);
+    color: white;
+    border-color: var(--cor-erro);
+}
+
+/* Botões de Ação do Jogo (Estender Tempo / Ajuda) */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.btn-action {
+    background-color: var(--cor-incentivo);
+    color: var(--cor-texto-principal);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: opacity 0.2s;
+}
+
+.btn-action:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================================
+   6. Estilos de Feedback, Alertas e Resultados
+   ========================================================================= */
+
+.feedback-message {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px 30px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.feedback-message.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.feedback-message.success { background-color: var(--cor-sucesso); }
+.feedback-message.warning { background-color: var(--cor-secundaria); }
+.feedback-message.error { background-color: var(--cor-erro); }
+.feedback-message.info { background-color: var(--cor-primaria); }
+.feedback-message.incentive { background-color: var(--cor-incentivo); color: var(--cor-texto-principal); }
+
+
+.libras-alert {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(var(--cor-secundaria), 0.95);
+    color: white;
+    padding: 20px 40px;
+    border-radius: 10px;
+    font-size: 1.5em;
+    font-weight: 700;
+    z-index: 999;
+    box-shadow: 0 0 20px rgba(255, 78, 80, 0.7);
+    animation: pulse 1s infinite alternate;
+}
+
+.libras-alert.hidden {
+    display: none;
+}
+
+@keyframes pulse {
+    from { transform: translate(-50%, -50%) scale(1); opacity: 0.95; }
+    to { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
+}
+
+
+/* Estilos de Resultados */
+.result-summary {
+    text-align: center;
+    margin-bottom: 25px;
+    padding: 25px;
+}
+
+.result-details {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px dashed var(--cor-borda-clara);
+}
+
+.result-item {
+    text-align: center;
+}
+
+.stat-label {
+    font-weight: 600;
+    color: var(--cor-texto-principal);
+}
+
+.result-item p {
+    font-size: 1.8em;
+    font-weight: 900;
+    margin: 5px 0 0 0;
+}
+
+.footer-options {
+    display: flex;
+    gap: 10px;
+}
+
+/* Estilos de Ranking e Erros */
+.ranking-list-container, .error-list-container {
+    margin-top: 20px;
+}
+
+.ranking-item, .error-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 15px;
+    background-color: var(--cor-fundo-claro);
+    border-left: 5px solid var(--cor-primaria);
+    border-radius: 6px;
+}
+
+.error-item {
+     border-left: 5px solid var(--cor-erro);
+     flex-direction: column;
+     align-items: flex-start;
+     gap: 5px;
+}
+
+.wrong-answer { color: var(--cor-erro); font-weight: 600; }
+.correct-answer { color: var(--cor-sucesso); font-weight: 600; }
+
+.ranking-item h3 { margin: 0; }
+.ranking-item p { margin: 0; font-size: 0.9em; }
+
+/* =========================================================================
+   8. Estilos da Seção "Criadores" (Avatares menores e circulares)
+   ========================================================================= */
+
+#creators-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--cor-borda-clara);
+    text-align: center;
+}
+
+.creators-grid {
+    display: flex;
+    justify-content: center;
+    gap: 30px; 
+    margin-top: 15px;
+}
+
+.creator-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 120px;
+}
+
+/* Tamanho do Avatar (Ajuste principal) */
+.creator-card .avatar {
+    width: 80px;      /* Largura do avatar */
+    height: 80px;     /* Altura do avatar */
+    border-radius: 50%; /* Transforma em círculo */
+    object-fit: cover; 
+    border: 3px solid var(--cor-primaria); /* Borda para destaque */
+    margin-bottom: 5px;
+}
+
+.creator-card p {
+    font-size: 0.9em;
+    font-weight: 600;
+    margin: 5px 0 0 0;
+    color: var(--cor-texto-principal);
+}
+
+/* =========================================================================
+   9. Responsividade
+   ========================================================================= */
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0;
+        margin-top: 0;
+    }
+
+    .screen {
+        padding: var(--espacamento-padrao);
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .operation-grid {
+        grid-template-columns: 1fr 1fr; /* 2 colunas em telas pequenas */
+    }
+    
+    .level-selection {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    #question-text {
+        font-size: 1.8em;
+    }
+
+    .answers-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .setting-btn, .mode-btn {
+        padding: 8px;
+    }
+
+    /* Avatares menores em telas muito pequenas */
+    .creators-grid {
+        gap: 15px;
+    }
+    .creator-card .avatar {
+        width: 60px;
+        height: 60px;
+    }
+    .creator-card p {
+        font-size: 0.8em;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+}
+
+/* --- Melhorias: alternativas numeradas + modal da tabuada --- */
+.answer-option{
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    gap: 10px;
+}
+.answer-index{
+    font-size: 0.85em;
+    font-weight: 700;
+    opacity: 0.85;
+    min-width: 28px;
+}
+.answer-text{
+    font-weight: 800;
+}
+
+/* Modal (Multiplicação) */
+.mm-modal-overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 16px;
+    z-index: 9999;
+}
+.mm-modal-overlay.hidden{ display:none; }
+
+.mm-modal{
+    width: min(560px, 96vw);
+    background: var(--cor-fundo, #fff);
+    color: var(--cor-texto, #111);
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+    padding: 16px;
+    border: 1px solid rgba(255,255,255,0.12);
+}
+.mm-modal-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+}
+.mm-modal-header h2{
+    font-size: 1.15rem;
+    margin: 0;
+}
+.mm-close{
+    border: none;
+    background: transparent;
+    font-size: 1.1rem;
+    cursor:pointer;
+    padding: 8px 10px;
+    border-radius: 10px;
+}
+.mm-close:hover{ background: rgba(0,0,0,0.06); }
+.mm-sub{ margin: 8px 0 12px; opacity: .9; }
+.mm-sub2{ margin: 14px 0 8px; opacity: .9; }
+
+.mm-actions{
+    display:flex;
+    flex-direction:column;
+    gap: 10px;
+}
+.mm-btn{
+    border-radius: 14px;
+    padding: 12px 14px;
+    border: 1px solid rgba(0,0,0,0.12);
+    background: rgba(255,255,255,0.9);
+    cursor:pointer;
+    font-weight: 800;
+    text-align:left;
+}
+.mm-btn:hover{ transform: translateY(-1px); }
+.mm-primary{
+    background: var(--cor-sucesso);
+    color: #0b1a00;
+    border-color: rgba(0,0,0,0.15);
+}
+.mm-direct.hidden{ display:none; }
+
+/* =========================================================================
+   Badge flutuante: Progresso do ciclo (Tabuada)
+   ========================================================================= */
+
+.mm-cycle-progress {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 9999;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--cor-texto-principal);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.2px;
+}
+
+body.dark-mode .mm-cycle-progress {
+    background: rgba(30, 30, 30, 0.92);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+.mm-grid{
+    display:grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 8px;
+}
+.mm-grid-btn{
+    border-radius: 12px;
+    padding: 10px 0;
+    border: 1px solid rgba(0,0,0,0.12);
+    background: rgba(255,255,255,0.95);
+    cursor:pointer;
+    font-weight: 900;
+}
+.mm-grid-btn:hover{ transform: translateY(-1px); }
+.mm-footer{ margin-top: 12px; opacity: .85; }
+
+
+
+/* --- Ranking --- */
+.ranking-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  margin: 10px 0;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+}
+.ranking-left { flex: 1; min-width: 0; }
+.ranking-title { font-size: 0.98em; line-height: 1.2; }
+.ranking-meta { font-size: 0.85em; opacity: 0.85; margin-top: 4px; }
+.ranking-score { font-size: 1.2em; font-weight: 800; }
+
+/* --- Painel do Professor --- */
+.teacher-fab {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 9999;
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.15);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  cursor: pointer;
+  font-size: 22px;
+}
+.teacher-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.teacher-overlay.hidden { display: none; }
+
+.teacher-panel {
+  width: min(560px, 95vw);
+  border-radius: 18px;
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid rgba(17, 24, 39, 0.12);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  color: #000000;
+}
+.teacher-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.teacher-panel-section { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.12); }
+.teacher-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.teacher-help { font-size: 0.9em; opacity: 0.9; margin-top: 8px; }
+
+/* --- Projeção (Datashow) --- */
+body.projection-mode {
+  font-size: 18px;
+}
+body.projection-mode .btn-primary,
+body.projection-mode .btn-secondary,
+body.projection-mode .answer-option {
+  font-size: 1.05em;
+  padding: 16px 18px;
+}
+body.projection-mode #question-text {
+  font-size: 2.1em;
+}
+
+/* --- Baixo estímulo --- */
+body.low-stimulus * {
+  animation: none !important;
+  transition: none !important;
+}
+body.low-stimulus #confetti-container { display: none !important; }
+
+
+/* =========================================================================
+   11. Atualizações v13 — Visual clean (Duolingo-like), Trilha e Painel Professor claro
+   ========================================================================= */
+
+/* Painel do Professor (fundo claro, letras escuras) */
+.teacher-overlay {
+    backdrop-filter: blur(2px);
+}
+.teacher-panel {
+    background: #ffffff;
+    color: #000000;
+    border: 1px solid rgba(17, 24, 39, 0.12);
+}
+.teacher-panel h2, .teacher-panel h3 {
+    color: #000000;
+}
+.teacher-help {
+    color: rgba(0,0,0,0.75);
+}
+.teacher-panel .btn-secondary,
+.teacher-panel .btn-action.btn-secondary {
+    background: rgba(17, 24, 39, 0.06);
+    color: #000000;
+    border: 1px solid rgba(17, 24, 39, 0.12);
+}
+.teacher-panel .btn-secondary:hover,
+.teacher-panel .btn-action.btn-secondary:hover {
+    background: rgba(17, 24, 39, 0.10);
+}
+.teacher-panel .btn-action {
+    border: 1px solid rgba(17, 24, 39, 0.12);
+}
+.teacher-guide summary {
+    cursor: pointer;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+.teacher-guide ul {
+    padding-left: 18px;
+    margin: 10px 0 0;
+}
+.teacher-guide li {
+    margin: 6px 0;
+}
+
+/* Perfil do estudante (modal reaproveitando painel) */
+.profile-panel .tp-input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(17, 24, 39, 0.18);
+    background: #fff;
+    color: #111827;
+}
+.profile-panel .tp-label {
+    display: block;
+    font-weight: 700;
+    margin-top: 10px;
+    margin-bottom: 6px;
+    color: rgba(17, 24, 39, 0.85);
+}
+
+/* Trilha (mapa) */
+.map-card {
+    margin-top: 14px;
+}
+.map-header h2 {
+    margin: 0;
+}
+.map-sub {
+    margin: 6px 0 0;
+    opacity: 0.85;
+}
+.map-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
+}
+.map-row {
+    display: grid;
+    grid-template-columns: 90px 1fr 70px;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(255,255,255,0.06);
+    cursor: pointer;
+}
+body:not(.dark-mode) .map-row {
+    border: 1px solid rgba(17,24,39,0.10);
+    background: rgba(17,24,39,0.02);
+}
+.map-label {
+    font-weight: 800;
+}
+.map-meta {
+    text-align: right;
+    font-weight: 800;
+    opacity: 0.8;
+}
+.map-nodes {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.map-node {
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    border: 2px solid rgba(255,255,255,0.35);
+    opacity: 0.75;
+}
+body:not(.dark-mode) .map-node {
+    border-color: rgba(17,24,39,0.25);
+}
+.map-node.done {
+    background: var(--cor-sucesso);
+    border-color: var(--cor-sucesso);
+    opacity: 1;
+}
+.map-node.current {
+    border-color: var(--cor-incentivo);
+    opacity: 1;
+    transform: scale(1.06);
+}
+
+/* Ajuste: botão Perfil alinhado */
+#btn-student-profile .icon {
+    margin-right: 6px;
+}
+
+
+/* Teacher panel forced light */
+.teacher-panel { background: #ffffff !important; color: #000000 !important; }
+.teacher-panel * { color: inherit; }
